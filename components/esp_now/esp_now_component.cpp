@@ -1,10 +1,10 @@
 #include "esp_now_component.h"
 
-#if defined(USE_ESP32)
-#include <esp_now.h>
-#elif defined(USE_ESP8266)
+#if defined(USE_ESP8266)
 #include <ESP8266WiFi.h>
 #include <espnow.h>
+#else
+#include <esp_now.h>
 #endif
 
 #include "esphome/core/helpers.h"
@@ -21,7 +21,7 @@ ESPNowComponent::ESPNowComponent() { global_esp_now = this; }
 void ESPNowComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up ESP-NOW...");
 
-#ifdef USE_ESP32
+#if undefined(USE_ESP8266)
   esp_err_t err = esp_now_init();
   if (err != ESP_OK) {
     ESP_LOGE(TAG, "esp_now_init failed: %s", esp_err_to_name(err));
@@ -36,7 +36,7 @@ void ESPNowComponent::setup() {
     return;
   }
 
-#elif defined(USE_ESP8266)
+#else
   int err = esp_now_init();
   if (err) {
     ESP_LOGE(TAG, "esp_now_init failed: %d", err);
@@ -86,7 +86,7 @@ void ESPNowComponent::dump_config() { ESP_LOGCONFIG(TAG, "esp_now:"); }
 
 #ifdef USE_ESP8266
 void ESPNowComponent::on_data_received(uint8_t *bssid, uint8_t *data, uint8_t len) {
-#elif defined(USE_ESP32)
+#else
 void ESPNowComponent::on_data_received(const uint8_t *bssid, const uint8_t *data, int len) {
 #endif
   auto packet = make_unique<ESPNowPacket>(bssid, data, len);

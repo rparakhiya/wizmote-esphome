@@ -43,7 +43,7 @@ class ESPNowComponent : public Component {
 
 #ifdef USE_ESP8266
   static void on_data_received(uint8_t *bssid, uint8_t *data, uint8_t len);
-#elif defined(USE_ESP32)
+#else
   static void on_data_received(const uint8_t *bssid, const uint8_t *data, int len);
 #endif
 
